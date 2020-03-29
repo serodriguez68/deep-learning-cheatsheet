@@ -46,6 +46,7 @@ There are many activation functions. We are going to talk about the 4 most used.
 
 ### Common Combinations
 A very common combination is using the rectifier for hidden layers and sigmoids for output layers.
+See the ["coding an ann article"](2-coding-an-ann.md#which-activation-function-to-use) for more information.
 
 ## How do Neural Networks Make a Prediction
 Once trained, we give to the input layer the features of a single property and data will

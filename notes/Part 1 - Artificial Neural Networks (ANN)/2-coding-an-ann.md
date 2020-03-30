@@ -35,3 +35,32 @@ Use 1 output neuron with a `sigmoid` activation function.
 If you have a 3-class problem:
 - One-hot encode the label without dropping any column (the dummy variable trap does not apply in Y).
 - Use 3 output neurons with the `softmax` activation function.
+
+## Which loss function to use?
+The loss function to choose depends on the activation function of your output layer. There are some pairs of
+<output activation functions, loss functions> that play well together.
+
+For example:
+- For __binary classification__ -> `sigmoid` output activation -> `binary_crossentropy` loss function
+- For __multi-class classification__ -> `softmax` output activation -> `categorical_crossentropy` loss function.
+
+## Selecting the optimizer
+- List of commonly used optimizers: Adam, SGD, RMSprop, Adadelta
+- The choice of an optimizer typically depends on your problem statement
+- See the [intuition notes](1-intuition.md#learning-rate) for some intuition on how to choose the learning rate.
+- The authors of the Udemy course suggest going with the `adam` optimizer and the default learning rate unless you
+know what you are doing.
+
+### Customizing the learning rate in Keras
+If you compile the ann with `optimizer='adam'` it will use a default learning rate.
+If you want to customize it you can do the following:
+```python
+from keras.optimizers import Adam
+# .......
+# .......
+opt = Adam(lr=1e-3)
+my_ann.compile(optimizer=opt, loss='binary_crossentropy', metrics=['accuracy'])
+```
+
+## Selecting `batch size` and `epochs`
+There is no rule of thumb to choose this hyper-parameters. It is an art and also requires experimentation.

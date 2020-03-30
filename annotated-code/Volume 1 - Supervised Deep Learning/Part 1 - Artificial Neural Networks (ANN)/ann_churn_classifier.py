@@ -71,11 +71,35 @@ classifier_ann.add(
     Dense(units=1, kernel_initializer='uniform', activation='sigmoid')
 )
 
+# Training the ANN
+# `compile` allows us to configure the training.
+classifier_ann.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+# optimizer: The algorithm used for optimization. 'adam' is a variant of stochastic gradient descent.
+#            If we just provide the string, a default learning rate is used.
+#            Alternatively we can give the `optimizer` argument an instance of the Adam optimizer with a custom
+#            learning rate (see 2-coding-an-ann.md for more info).
+# loss: Loss / cost function to use. We chose this based on the activation function of the output layer.
+#       See notes for more info.
+# metrics: List of metrics to report while your model is being trained.
+
+# Fit the training set
+classifier_ann.fit(X_train, y_train, batch_size=10, epochs=100)
+# batch_size: number of observations before the loss function gets evaluated and the weights are updated.
+# How to choose these parameters? It is an art. You need to do experimentation.
+
 
 # Part 3 - Making the predictions and evaluating the model
 # ----------------------------
 
-# Making the Confusion Matrix
-from sklearn.metrics import confusion_matrix
+# Predicting the test results
+y_pred_probs = classifier_ann.predict(X_test)
+y_pred = (y_pred_probs > 0.5)  # Convert probabilites to True or False
 
+# Evaluating test set performance
+from sklearn.metrics import confusion_matrix
 cm = confusion_matrix(y_test, y_pred)
+accuracy = (cm[0, 0] + cm[1, 1])/cm.sum()
+print('Confusion Matrix')
+print(cm)
+print('Accuracy: ' + str(accuracy * 100) + ' %')
+

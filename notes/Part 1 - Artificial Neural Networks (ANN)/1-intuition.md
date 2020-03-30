@@ -100,10 +100,11 @@ There are many cost functions and different functions have different use cases.
 ### Learning Rate
 The `learning rate` is a hyper paremeter that we have to decide before running the algorithm. The `learning rate`
 decided *by how much* the weights should get adjusted relative to the error.
- - A bigger `learning rate` makes the training less stable (weights jump more), but it also gives the algorithm the 
+ - A higher `learning rate` makes the training less stable (weights jump more), but it also gives the algorithm the 
  opportunity to finalise faster (if it doesn't diverge that is).
- - A smaller `learning rate` makes the algorithm slower, but also makes it more stable.
-
+   - High learning rates also tend to overfit if the dataset is small or we have large number of epochs.
+ - A lower `learning rate` makes the algorithm slower, but also makes it more stable.
+    - Low rates might lead to underfitting on low epochs.
 
 ### Back propagation
 **Back propagation** is the process of adjusting the weights on each neuron by back propagating the errors detected by 

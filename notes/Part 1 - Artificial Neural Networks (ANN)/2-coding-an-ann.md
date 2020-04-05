@@ -13,7 +13,7 @@ see [my summary on feature scaling](https://github.com/serodriguez68/machine-lea
 for more information.
 
 ## Code
-[This annotated code](./../../annotated-code/Volume%201%20-%20Supervised%20Deep%20Learning/Part%201%20-%20Artificial%20Neural%20Networks%20(ANN)/ann_churn_classifier.py)
+[This annotated code](./../../annotated_code/volume_1_supervised_deep_learning/part_1_artificial_neural_networks/ann_churn_classifier.py)
 shows a the step-by-step of building an ANN binary classifier using Keras.
 
 ## How many nodes should I add to the hidden layers?
@@ -64,3 +64,24 @@ my_ann.compile(optimizer=opt, loss='binary_crossentropy', metrics=['accuracy'])
 
 ## Selecting `batch size` and `epochs`
 There is no rule of thumb to choose this hyper-parameters. It is an art and also requires experimentation.
+
+## Overfitting control using _dropout regularisation_
+__Dropout regularisation__ is a technique for reducing overfitting problems in deep learning.
+
+It works by randomly disabling a fraction of the neurons on each layer at each iteration of the training process.
+If we think of each layer of an ANN as some automatically learned representation of the input features, dropping neurons
+randomly is equivalent to dropping features randomly. From this angle, this mechanism is similar in spirit as the one used by 
+__random forests__ to control overfitting (and ensure generalisation). __Random Forest trees__ are built using 
+a randomly chosen sub-set of features. 
+
+### Detecting overfitting
+There are 2 ways for detecting overfitting:
+1. When we see that the training set accuracy largely outperforms the test set accuracy.
+2. When there is a high accuracy variance (or standard deviation) in [cross-validation](3-evaluating-and-tuning-an-ann.md#k-fold-cross-validation).
+
+### Implementing dropout
+- When you observer overfitting, it is recommended that you apply dropout to all hidden layers.
+- Start with a small fraction of dropout (e.g 0.1) and assess if that fixes the problem. If not, slowly increase the 
+fraction and keep assessing.
+- Don't go beyond `0.5` or you will risk underfitting.
+

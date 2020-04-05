@@ -7,7 +7,7 @@ import pandas as pd
 
 # Importing the dataset
 dataset = pd.read_csv(
-    './annotated-code/Volume 1 - Supervised Deep Learning/Part 1 - Artificial Neural Networks (ANN)/Churn_Modelling.csv')
+    './annotated_code/volume_1_supervised_deep_learning/part_1_artificial_neural_networks/Churn_Modelling.csv')
 X = dataset.iloc[:, 3:13].values  # Get rid of non-useful columns
 y = dataset.iloc[:, 13].values
 
@@ -24,15 +24,16 @@ X_enc = X_enc[:, 1:]  # Drop one dummy variable to avoid dummy variable trap
 
 # Splitting the dataset into the Training set and Test set
 from sklearn.model_selection import train_test_split
+
 X_train, X_test, y_train, y_test = train_test_split(X_enc, y, test_size=0.2, random_state=0)
 
 # Feature Scaling
 # This is absolutely compulsory for ANNs
 from sklearn.preprocessing import StandardScaler
+
 sc = StandardScaler()
 X_train = sc.fit_transform(X_train)
 X_test = sc.transform(X_test)
-
 
 # Part 2 - Make the ANN
 # ----------------------------
@@ -41,6 +42,7 @@ X_test = sc.transform(X_test)
 import keras
 from keras.models import Sequential  # To define the ANN
 from keras.layers import Dense  # To build the hidden layers
+from keras.layers import Dropout  # Overfitting control with dropout regularisation
 
 # Defining the ANN
 # There are 2 ways of defining an ANN in Keras:
@@ -58,12 +60,16 @@ classifier_ann.add(
     #            On following hidden_layers, Keras automatically detects the size of the input based on the
     #            previous layer.
 )
+classifier_ann.add(Dropout(p=0.1))
+# p: fraction of the neurons in the layer that we want to randomly drop at each iteration.
+#    Start with p=0.1 and see if that solves overfitting. If not, increase slowly until the problem is solved.
 
 # Add a Second Hidden Layer
 classifier_ann.add(
     Dense(units=6, kernel_initializer='uniform', activation='relu')
     # Note that input_dim parameter is not needed
 )
+classifier_ann.add(Dropout(p=0.1))
 
 # Add the Output Layer
 # We use 1 node with a sigmoid function to make the network a classifier
@@ -95,11 +101,28 @@ classifier_ann.fit(X_train, y_train, batch_size=10, epochs=100)
 y_pred_probs = classifier_ann.predict(X_test)
 y_pred = (y_pred_probs > 0.5)  # Convert probabilites to True or False
 
-# Evaluating test set performance
+# Evaluating test 1set performance
 from sklearn.metrics import confusion_matrix
+
 cm = confusion_matrix(y_test, y_pred)
-accuracy = (cm[0, 0] + cm[1, 1])/cm.sum()
+accuracy = (cm[0, 0] + cm[1, 1]) / cm.sum()
 print('Confusion Matrix')
 print(cm)
 print('Accuracy: ' + str(accuracy * 100) + ' %')
 
+# Part 4 - Classifying a single observation in the future
+# ----------------------------
+# Observation:
+# 'France', 600 credit score, male, 40 years, 3 yr tenure, balance 60,000, 2 products, true credit card
+# true active member, estimated salary 50,000
+
+# Get observation with categorical values encoded.
+X_enc_homework = [[0, 0, 600, 1, 40, 3, 60000, 2, 1, 1, 50000]]
+
+# Scale data using the scaler fitted with training data
+X_homework = sc.transform(X_enc_homework)
+
+# Classify using ANN
+y_homework_prob = classifier_ann.predict(X_homework)[0][0]
+y_label = y_homework_prob > 0.5
+print('The probability of exit is: ' + str(y_homework_prob) + ' (' + str(y_label) + ')')

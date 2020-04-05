@@ -36,7 +36,7 @@ sc = StandardScaler()
 X_train = sc.fit_transform(X_train)
 X_test = sc.transform(X_test)
 
-# Part 2 - Evaluating, Improving and Tuning the ANN
+# Part 2 - Evaluating and Tuning the ANN
 # ----------------------------
 # Evaluating the ANN using k-fold cross validation
 from keras.wrappers.scikit_learn import KerasClassifier
@@ -64,3 +64,35 @@ mean_accuracy = accuracies.mean()
 accuracy_std = accuracies.std()
 print('Mean accuracy: ' + str(mean_accuracy))
 print('Standard deviation of accruacy: ' + str(accuracy_std))
+
+# Part 3 - Hyperparameter tuning
+# ----------------------------
+# Done using grid search, which in turn uses cross-validation internally
+from sklearn.model_selection import GridSearchCV
+from annotated_code.volume_1_supervised_deep_learning.part_1_artificial_neural_networks.evaluating_and_tuning.build_classifier_ann import build_classifier_ann
+
+classifier_ann = KerasClassifier(build_fn=build_classifier_ann)
+
+hyperparam_grid = {
+    'batch_size': [25, 32],
+    'epochs': [100, 500],
+    'optimizer': ['adam', 'rmsprop']
+}
+# The different values of the hyperparams we want to grid search.
+# The string name of the key needs to match the name of the argument that the code expects.
+# To search parameters in the network architecture, add arguments to the `build_fn` function  and match the name
+# (@see build_classifier_ann ans 'optimizer' in this case)
+
+grid_search = GridSearchCV(estimator=classifier_ann,
+                           param_grid=hyperparam_grid,
+                           scoring='accuracy',
+                           # the metric used to select the best combination of hyper params
+                           cv=10,
+                           n_jobs=-1)
+# GridSearchCV internally uses k-fold cross validation to evaluate the scoring function of each grid combination.
+
+trained_grid = grid_search.fit(X_train, y_train)
+best_parameters = trained_grid.best_params_
+best_accuracy = trained_grid.best_score_
+print('The best parameters are: ' + str(best_parameters))
+print('The best accuracy is: ' + str(best_accuracy))

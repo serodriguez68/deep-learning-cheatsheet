@@ -22,3 +22,10 @@ need to resort to more robust evaluation strategies like __k-fold cross validati
 - The list of 5 accuracies allows us to calculate the accuracy's __average__ and the __standard deviation / variance__.  This is a much more robust evaluation than a single train-test split.
 - The __test set__ is still reserved as a strictly unseen piece of data that can be used to do
 a final evaluation of the final model (e.g. the 6th iteration trained with all the data).
+
+## Hyperparameter tuning
+This is mostly done through grid search.  In `sklearn` GridSearchCV internally uses k-fold cross validation.
+See [the code](#Code) for full details on how to do this.
+
+## Code
+See these concepts in action [here](../../annotated_code/volume_1_supervised_deep_learning/part_1_artificial_neural_networks/evaluating_and_tuning/evaluating_and_tuning_ann.py)

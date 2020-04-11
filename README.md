@@ -19,4 +19,4 @@ This is a WIP and it will take a while. This TOC contains the cheat sheets that 
 - Part 1 - Artificial Neural Networks
   - [Intuition](./notes/Part%201%20-%20Artificial%20Neural%20Networks%20(ANN)/1-intuition.md)
   - [Coding an ANN](./notes/Part%201%20-%20Artificial%20Neural%20Networks%20(ANN)/2-coding-an-ann.md)
-  - [Evaluationg and Tuning](./notes/Part%201%20-%20Artificial%20Neural%20Networks%20(ANN)/3-evaluating-and-tuning-an-ann.md)
+  - [Evaluation and Tuning](./notes/Part%201%20-%20Artificial%20Neural%20Networks%20(ANN)/3-evaluating-and-tuning-an-ann.md)

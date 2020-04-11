@@ -16,6 +16,8 @@ on Udemy.
 # Table of Content
 
 This is a WIP and it will take a while. This TOC contains the cheat sheets that have been finalized.
+
+__Volume 1: Supervised Deep Learning__
 - Part 1 - Artificial Neural Networks
   - [Intuition](./notes/Part%201%20-%20Artificial%20Neural%20Networks%20(ANN)/1-intuition.md)
   - [Coding an ANN](./notes/Part%201%20-%20Artificial%20Neural%20Networks%20(ANN)/2-coding-an-ann.md)

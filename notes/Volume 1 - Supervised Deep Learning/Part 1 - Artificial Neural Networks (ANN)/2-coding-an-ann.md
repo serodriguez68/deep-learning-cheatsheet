@@ -13,7 +13,7 @@ see [my summary on feature scaling](https://github.com/serodriguez68/machine-lea
 for more information.
 
 ## Code
-[This annotated code](./../../annotated_code/volume_1_supervised_deep_learning/part_1_artificial_neural_networks/ann_churn_classifier.py)
+[This annotated code](../../../annotated_code/volume_1_supervised_deep_learning/part_1_artificial_neural_networks/ann_churn_classifier.py)
 shows a the step-by-step of building an ANN binary classifier using Keras.
 
 ## How many nodes should I add to the hidden layers?

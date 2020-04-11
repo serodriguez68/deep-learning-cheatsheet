@@ -1,7 +1,7 @@
 # Evaluating and Tuning an ANN
 
 ## Motivation
-Using a simple single train-test split evaluation as shown in the [`ann_churn_classifier code`](../../annotated_code/volume_1_supervised_deep_learning/part_1_artificial_neural_networks/ann_churn_classifier.py)
+Using a simple single train-test split evaluation as shown in the [`ann_churn_classifier code`](../../../annotated_code/volume_1_supervised_deep_learning/part_1_artificial_neural_networks/ann_churn_classifier.py)
 is a good way to "quickly" iterate over the different features and network arrangements until we
 find a candidate architecture we feel confident about.
 
@@ -28,4 +28,4 @@ This is mostly done through grid search.  In `sklearn` GridSearchCV internally u
 See [the code](#Code) for full details on how to do this.
 
 ## Code
-See these concepts in action [here](../../annotated_code/volume_1_supervised_deep_learning/part_1_artificial_neural_networks/evaluating_and_tuning/evaluating_and_tuning_ann.py)
+See these concepts in action [here](../../../annotated_code/volume_1_supervised_deep_learning/part_1_artificial_neural_networks/evaluating_and_tuning/evaluating_and_tuning_ann.py)

@@ -38,7 +38,7 @@ __The algorithm learns which features are important from the data.__
 - __Stride:__ the step (in pixels) we use to move the feature detector for creating the __feature map__. 
   - Typically people use 2, but this is hyper-parameter.
   - The size of the stride impacts the size of the __feature map__.
-  
+  - Mismatches between __image size__ and __stride__ are solved by adding 0-padding to the image.
 
 The __Feature Map__ is the result of applying a __feature detector__ to an input image. It is a spatial representation of 
 how much is each feature detected in each area of the image (i.e. how active each area is for that particular feature).  
@@ -59,7 +59,34 @@ The __stride__ and the size of the __feature maps__ are related.  The higher the
 CNNs simultaneously learn and use different __feature detectors__ on the Convolution Layer. 
 This means that multiple __feature maps__ are created from one image (one feature map per feature detector).
 
-#### ReLU Layer
+In the end, __the hyperparams__ of the convolution layer are: __feature detector size__, __stride__ and __depth__
+(number of feature detectors).
+
+
+#### Clipping of negative values in the feature maps (ReLU layer)
+
+Clipping of negative values in the __feature maps__ is done at the output of each convolution layer by using a
+non linear activation function.
+ - Clipping = map negative values to 0 or something close to 0.
+
+Typically a __ReLU activation function__ is used on each cell of the feature map.  However, other functions like
+__Sigmoid__ or a __Parametrized RelU (PReLU)__ (aka Leaky ReLU) can also be used.
+
+The mathematical grounding of why this is needed is complicated and beyond the scope of this summary. It has been 
+observed experimentally that, if the nonlinear clipping operation is removed, the system performance drops by a 
+large margin.
+
+An intuitive (non-precise) explanation of why this is needed is because we want a system architecture that promotes 
+__feature detectors__ to learn weights that __ACTIVATE__ (i.e. go positive) when a feature is detected. With this in mind, 
+a negative activation makes no sense.
+
+Additionally, negative activation in layer 1 might be picked up by a negative filter in layer 2, resulting in a 
+positive layer 2 output.  At this point, the system cannot differentiate between this 
+_double negative_ activation and an activation that has been positive all the way.  This ultimately hurst robustness
+and performance.
+
+You can find more on the mathematical grounding of this here: https://arxiv.org/pdf/1609.04112.pdf
+
 ### 2. Pooling
 ### 3. Flattening
 ### 4. Full Connection

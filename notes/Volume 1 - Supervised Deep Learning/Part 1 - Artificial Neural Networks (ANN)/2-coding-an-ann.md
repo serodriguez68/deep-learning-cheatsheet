@@ -36,6 +36,7 @@ If you have a 3-class problem:
 - One-hot encode the label without dropping any column (the dummy variable trap does not apply in Y).
 - Use 3 output neurons with the `softmax` activation function.
 
+
 ## Which loss function to use?
 The loss function to choose depends on the activation function of your output layer. There are some pairs of
 <output activation functions, loss functions> that play well together.
@@ -43,6 +44,10 @@ The loss function to choose depends on the activation function of your output la
 For example:
 - For __binary classification__ -> `sigmoid` output activation -> `binary_crossentropy` loss function
 - For __multi-class classification__ -> `softmax` output activation -> `categorical_crossentropy` loss function.
+
+For regression, `mean squared error` loss function is typically used.
+
+Here you can find more information about the loss function and tasks: https://towardsdatascience.com/understanding-different-loss-functions-for-neural-networks-dd1ed0274718
 
 ## Selecting the optimizer
 - List of commonly used optimizers: Adam, SGD, RMSprop, Adadelta

@@ -142,10 +142,6 @@ Prediction works the [same way as it works on a traditional ANN](../Part%201%20-
 The image is fed as input and all the weight operations are applied and propagated forward until the output layer.
 
 
-
-## Softmax & Cross-Entropy
-
-
 ## Complementary Readings
 - https://www.superdatascience.com/blogs/the-ultimate-guide-to-convolutional-neural-networks-cnn
 - https://adeshpande3.github.io/The-9-Deep-Learning-Papers-You-Need-To-Know-About.html

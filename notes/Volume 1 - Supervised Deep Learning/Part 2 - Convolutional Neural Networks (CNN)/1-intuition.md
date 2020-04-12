@@ -112,6 +112,11 @@ More information about the details of different pooling configurations: http://a
   - In the paper: Subsampling = average pooling
 
 ### 3. Flattening
+![flattening](flattening.png)
+
+On the last layer of max pooled maps, we take each map and flatten it to form one big columnar vector
+that will serve as the input layer for the next step.   
+
 ### 4. Full Connection
 
 ## Softmax & Cross-Entropy

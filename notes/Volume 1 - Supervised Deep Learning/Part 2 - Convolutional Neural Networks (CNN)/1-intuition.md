@@ -29,6 +29,8 @@ The next example shows how a "smiley face" can be represented using a simple _Bl
 
 This tool provides a nice visualization of how a CNN works: https://www.cs.ryerson.ca/~aharley/vis/conv/flat.html
 
+![cnn architecture overview](cnn-architecture-overview.png)
+
 ### 1. Convolution Operation
 
 ![Convolution in action](convolution-in-action.gif)

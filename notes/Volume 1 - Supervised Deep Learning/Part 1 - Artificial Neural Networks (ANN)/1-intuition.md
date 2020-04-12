@@ -60,7 +60,7 @@ Here is a toy example for the prediction of property price.
 ![how anns predict](how-anns-predict.png)
 
 
-## How to Tran a Neural Networks
+## How to Train a Neural Networks
 
 The following GIF shows a dummy example of a perceptron getting trained with a dummy dataset of 1
 through multiple **epochs**. A perceptron is the simplest ANN possible, with just one neuron.

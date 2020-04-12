@@ -5,6 +5,9 @@
 CNNs are typically used for image recognition tasks like image classification, but they also have applications
 in recommender systems, natural language processing and time series.
 
+In general, whenever you face a problem that requires __sliding a window__ over the input, think of a CNN (e.g. a NLP
+problem that requires a __sliding window__ of text can also be addressed with a CNN). 
+
 In this work, we will anchor all the explanation of CNNs through image classification tasks, but the knowledge is
 transferable to other applications.
   
@@ -118,9 +121,29 @@ On the last layer of max pooled maps, we take each map and flatten it to form on
 that will serve as the input layer for the next step.   
 
 ### 4. Full Connection
+We then add a __fully connected feed forward ANN__ using the flattening layer as input layer. This FF-ANN might
+have one or many hidden fully connected layers. The number of neurons in the output layer follows the nature
+of the task (e.g. 1 neuron for a binary classification problem).
+
+
+The hyperparameters of the fully-connected network are the [same as the ones in an ANN](../Part%201%20-%20Artificial%20Neural%20Networks%20(ANN)/2-coding-an-ann.md#which-activation-function-to-use).
+
+## Training and Prediction in CNNs
+
+The training of a CNN is similar to [the training in ANNs](../Part%201%20-%20Artificial%20Neural%20Networks%20(ANN)/1-intuition.md#how-to-train-a-neural-networks);
+it is also rooted on the calculation of an `error` using a `cost function` and `back propagating` the error to
+adjust the `weights` on each neuron.
+* One important thing to highlight is that the __feature detectors__ are made up of `weights` that are LEARNT during
+training.
+
+Prediction works the [same way as it works on a traditional ANN](../Part%201%20-%20Artificial%20Neural%20Networks%20(ANN)/1-intuition.md#how-do-neural-networks-make-a-prediction). 
+The image is fed as input and all the weight operations are applied and propagated forward until the output layer.
+
+
 
 ## Softmax & Cross-Entropy
 
 
 ## Complementary Readings
 - https://www.superdatascience.com/blogs/the-ultimate-guide-to-convolutional-neural-networks-cnn
+- https://adeshpande3.github.io/The-9-Deep-Learning-Papers-You-Need-To-Know-About.html

@@ -23,6 +23,9 @@ The next example shows how a "smiley face" can be represented using a simple _Bl
 ![CNN Sample Input](cnn-sample-input-face.png)
 
 ## Structure of a CNN (Steps)
+
+This tool provides a nice visualization of how a CNN works: https://www.cs.ryerson.ca/~aharley/vis/conv/flat.html
+
 ### 1. Convolution Operation
 
 ![Convolution in action](convolution-in-action.gif)
@@ -87,7 +90,27 @@ and performance.
 
 You can find more on the mathematical grounding of this here: https://arxiv.org/pdf/1609.04112.pdf
 
-### 2. Pooling
+### 2. Downsampling via Pooling
+![max pooling](max-pooling.gif)
+
+Downsampling is done to make the network __more robust__ and to __prevent parameter explosion__.
+- __Robustness__: pooling makes the network "less picky" about minor variances in the features the __filters__ detect.
+In particular we don't want the network to be "tricked" by small differences of the same feature like slight rotations
+or differences in texture (this is called spatial invariance).
+- __Prevent parameter explosion__: Downsampling removes all the information that is not related to the 
+the filter's feature.  In practice this reduces the number of parameters downstream which in turn prevents overfitting
+and makes the processing faster.
+
+#### Pooling Hyperparameters
+- __Types__: there are multiple types of pooling (e.g. min pooling, max pooling, subsampling).
+  - Max pooling is the most common.
+- __Size of the pooling window__.
+- __Stride:__ 2 is a very common setting to use.
+
+More information about the details of different pooling configurations: http://ais.uni-bonn.de/papers/icann2010_maxpool.pdf
+  - Especially parts 1 and 3.
+  - In the paper: Subsampling = average pooling
+
 ### 3. Flattening
 ### 4. Full Connection
 

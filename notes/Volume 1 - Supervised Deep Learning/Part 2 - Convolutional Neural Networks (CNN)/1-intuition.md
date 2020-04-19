@@ -69,18 +69,18 @@ In the end, __the hyperparams__ of the convolution layer are: __feature detector
 (number of feature detectors).
 
 
-#### Clipping of negative values in the feature maps (ReLU layer)
+#### 1.1 Clipping of negative values in the feature maps (ReLU layer)
 
 Clipping of negative values in the __feature maps__ is done at the output of each convolution layer by using a
 non linear activation function.
  - Clipping = map negative values to 0 or something close to 0.
 
-Typically a __ReLU activation function__ is used on each cell of the feature map.  However, other functions like
+Typically, a __ReLU activation function__ is used on each cell of the feature map.  However, other functions like
 __Sigmoid__ or a __Parametrized RelU (PReLU)__ (aka Leaky ReLU) can also be used.
 
-The mathematical grounding of why this is needed is complicated and beyond the scope of this summary. It has been 
-observed experimentally that, if the nonlinear clipping operation is removed, the system performance drops by a 
-large margin.
+ __Why do we need this?__ It has been observed experimentally that, if the nonlinear clipping operation is removed, 
+ the system performance drops by a large margin. The mathematical grounding of why this is needed is complicated 
+ and beyond the scope of this summary.
 
 An intuitive (non-precise) explanation of why this is needed is because we want a system architecture that promotes 
 __feature detectors__ to learn weights that __ACTIVATE__ (i.e. go positive) when a feature is detected. With this in mind, 

@@ -122,8 +122,9 @@ that will serve as the input layer for the next step.
 
 ### 4. Full Connection
 We then add a __fully connected feed forward ANN__ using the flattening layer as input layer. This FF-ANN might
-have one or many hidden fully connected layers. The number of neurons in the output layer follows the nature
-of the task (e.g. 1 neuron for a binary classification problem).
+have one or many hidden fully connected layers. [The number of neurons in the output layer follows the nature
+of the task](../Part%201%20-%20Artificial%20Neural%20Networks%20(ANN)/1-intuition.md#the-basic-neuron-model) 
+(e.g. 1 neuron for a binary classification problem).
 
 
 The hyperparameters of the fully-connected network are the [same as the ones in an ANN](../Part%201%20-%20Artificial%20Neural%20Networks%20(ANN)/2-coding-an-ann.md#which-activation-function-to-use).

@@ -105,7 +105,7 @@ the filter's feature.  In practice this reduces the number of parameters downstr
 and makes the processing faster.
 
 #### Pooling Hyperparameters
-- __Types__: there are multiple types of pooling (e.g. min pooling, max pooling, subsampling).
+- __Types__: there are multiple types of pooling (e.g. min pooling, max pooling, subsampling / average pooling).
   - Max pooling is the most common.
 - __Size of the pooling window__.
 - __Stride:__ 2 is a very common setting to use.

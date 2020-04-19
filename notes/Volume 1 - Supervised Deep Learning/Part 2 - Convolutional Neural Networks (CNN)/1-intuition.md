@@ -131,10 +131,10 @@ The hyperparameters of the fully-connected network are the [same as the ones in 
 
 ## Training and Prediction in CNNs
 
-The training of a CNN is similar to [the training in ANNs](../Part%201%20-%20Artificial%20Neural%20Networks%20(ANN)/1-intuition.md#how-to-train-a-neural-networks);
-it is also rooted on the calculation of an `error` using a `cost function` and `back propagating` the error to
+The training of a CNN is similar to [the training in ANNs](../Part%201%20-%20Artificial%20Neural%20Networks%20(ANN)/1-intuition.md#how-to-train-a-neural-networks).
+It is also rooted on the calculation of an `error` using a `cost function` and `back propagating` the error to
 adjust the `weights` on each neuron.
-* One important thing to highlight is that the __feature detectors__ are made up of `weights` that are LEARNT during
+* One important thing to highlight is that the __feature detectors__ are made up of `weights` that are __LEARNT__ during
 training.
 
 Prediction works the [same way as it works on a traditional ANN](../Part%201%20-%20Artificial%20Neural%20Networks%20(ANN)/1-intuition.md#how-do-neural-networks-make-a-prediction). 

@@ -109,3 +109,23 @@ image_classifier_cnn.add(
     Dense(units=1, activation='sigmoid')
 )
 
+# @see annotated_code/volume_1_supervised_deep_learning/part_1_artificial_neural_networks/ann_churn_classifier.py
+#      for what each of this parameters mean
+image_classifier_cnn.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
+# Part 3 - Training the CNN on the images (and augmented images)
+# ----------------------------
+# TODO: you were going to build Tensorflow from source to get rid of the warning and speedup
+# The warning: Your CPU supports instructions that this TensorFlow binary was not compiled to use: SSE4.1 SSE4.2 AVX AVX2 FMA
+# How to build: https://github.com/tensorflow/tensorflow/issues/8037#issuecomment-283831398
+
+image_classifier_cnn.fit_generator(
+        training_set,
+        # steps_per_epoch: Number of images on the training set (without counting image augmentation).
+        # We want all data to go through on each epoch.
+        steps_per_epoch=8000,
+        epochs=25,
+        validation_data=test_set,
+        # validation_steps: Number of images on the test set (without counting image augmentation).
+        validation_steps=2000
+)

@@ -1,23 +1,53 @@
-# Part 1 - Data Preprocessing
+# Part 1 - Data Pre-processing
 # ----------------------------
-# Loading images, loading labels and splitting the data:
-# - This is mostly done by hand before we start coding.
-# - Keras makes all the loading really simple for us if we provide all the data
-#   following a folder structure that it expects.
-# - See the "coding-a-cnn" notes for more details.
-
-# Feature Scaling
-# TODO: WHERE DOES FEATURE SCALING GOES? It was metioned in the video but not shown yet.
+# READ the 2-coding-a-cnn.md notes for more information about data Pre-Processing
 
 # IMPORTANT NOTE: the dataset to run this example was not included in the
 # repo because it is too big.  Please go to https://www.superdatascience.com/pages/deep-learning
 # to download it.
+TRAINING_SET_DIRECTORY = 'annotated_code/volume_1_supervised_deep_learning/part_2_convolutional_neural_network/dataset/training_set'
+TEST_SET_DIRECTORY = 'annotated_code/volume_1_supervised_deep_learning/part_2_convolutional_neural_network/dataset/test_set'
+INPUT_IMAGE_SIZE = (64, 64)
+INPUT_IMAGE_SIZE_W_CHANNELS = INPUT_IMAGE_SIZE + (3,)
+PIXEL_MAX_VALUE = 255
+
+from keras.preprocessing.image import ImageDataGenerator
+
+# This line combines Pixel Scaling and Image Augmentation
+# train_datagen is a wrapper that wraps the training dataset and applies the describe operations when images
+# are requested from it.
+train_datagen = ImageDataGenerator(
+        rescale=1./PIXEL_MAX_VALUE,  # Rescale all pixel values between 0 and 1
+        shear_range=0.2,      # Random shear range (Image Augmentation)
+        zoom_range=0.2,       # Random zoom range (Image Augmentation)
+        horizontal_flip=True  # Random flipping enabled (Image Augmentation)
+)
+
+# The test-set will also be wrapped, but only the Pixel Scaling is applied
+test_datagen = ImageDataGenerator(rescale=1./PIXEL_MAX_VALUE)
+
+# Load dataset from prescribed folder structure using Keras' flow_from_directory method
+# training_set is a lazy reference to the training dataset.
+# The images are lazily given to the cnn in batches and the random transformations happen lazily as well.
+# This is necessary because we cannot load all the images in memory at the same time.
+training_set = train_datagen.flow_from_directory(
+        TRAINING_SET_DIRECTORY,
+        target_size=INPUT_IMAGE_SIZE,  # Resizing images to a standard shape
+        batch_size=32,  # Size of the training batches in mini-batch gradient descent
+        class_mode='binary'  # Type of problem
+)
+test_set = test_datagen.flow_from_directory(
+        TEST_SET_DIRECTORY,
+        target_size=INPUT_IMAGE_SIZE,
+        batch_size=32,
+        class_mode='binary'
+)
+
 
 # Part 2 - Make the CNN
 # ----------------------------
 
 # Import the libraries
-import keras
 from keras.models import Sequential  # Used to define an network container
 from keras.layers import Convolution2D  # To deal with images (including color images)
 from keras.layers import MaxPool2D
@@ -29,7 +59,7 @@ image_classifier_cnn = Sequential()   # Creates an empty container for the netwo
 
 # Add the First Convolution + ReLU Layer
 image_classifier_cnn.add(
-    Convolution2D(filters=32, kernel_size=(3, 3), strides=1, input_shape=(64, 64, 3), data_format='channels_last', activation='relu')
+    Convolution2D(filters=32, kernel_size=(3, 3), strides=1, input_shape=INPUT_IMAGE_SIZE_W_CHANNELS, data_format='channels_last', activation='relu')
     # filters: The number of feature detectors / filters. See notes for details on how many to put.
     # kernel_size: The size of each filter. If given an integer, it uses the same value in both directions.
     # strides: The stride to move the filters. When given an integer, it applies the same stride in both direction.
@@ -51,6 +81,14 @@ image_classifier_cnn.add(
 )
 
 #  We can keep adding convolutional-relu layers followed by max pooling layers in a similar way as above...
+image_classifier_cnn.add(
+    Convolution2D(filters=64, kernel_size=(3, 3), strides=1, data_format='channels_last', activation='relu')
+    # We omit input_shape, because this time because Keras automatically figures out the input shape based on the
+    # previous layer.  The input_shape parameter is only need for the first layer of the whole network
+)
+image_classifier_cnn.add(
+    MaxPool2D(pool_size=2)
+)
 
 # Add the Flattening Layer
 # Flattens the last max-pooling layer into a (very big) single vector

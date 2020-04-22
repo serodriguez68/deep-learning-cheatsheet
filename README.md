@@ -24,3 +24,4 @@ __Volume 1: Supervised Deep Learning__
   - [Evaluation and Tuning](./notes/Volume%201%20-%20Supervised%20Deep%20Learning/Part%201%20-%20Artificial%20Neural%20Networks%20(ANN)/3-evaluating-and-tuning-an-ann.md)
 - Part 2 - Convolutional Neural Networks
   - [Intuition](./notes/Volume%201%20-%20Supervised%20Deep%20Learning/Part%202%20-%20Convolutional%20Neural%20Networks%20(CNN)/1-intuition.md)
+  - [Coding a CNN](./notes/Volume%201%20-%20Supervised%20Deep%20Learning/Part%202%20-%20Convolutional%20Neural%20Networks%20(CNN)/2-coding-a-cnn.md)

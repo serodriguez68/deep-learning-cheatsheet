@@ -26,6 +26,5 @@ __Volume 1: Supervised Deep Learning__
   - [Intuition](./notes/Volume%201%20-%20Supervised%20Deep%20Learning/Part%202%20-%20Convolutional%20Neural%20Networks%20(CNN)/1-intuition.md)
   - [Coding a CNN](./notes/Volume%201%20-%20Supervised%20Deep%20Learning/Part%202%20-%20Convolutional%20Neural%20Networks%20(CNN)/2-coding-a-cnn.md)
 
-__Miscellaneous__
-Stuff that applies to deep learning in general
+__Miscellaneous__: stuff that applies to deep learning in general
  - [Optimizing CPU-Based Deep Learning on Intel Processors](notes/miscellaneous/1-optimizing-cpu-deep-learning-on-intel-processors.md)

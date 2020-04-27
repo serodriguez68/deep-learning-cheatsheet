@@ -96,6 +96,13 @@ to dropout in the convolution or max-pooling layers.
 
 [Learn more about dropout regularisation here.][machine-learning-mastery-dropout]
 
+## Model Saving and Loading
+
+Keras supports a very convenient way of saving a model's architecture together with the trained weights to disk.
+This allows us to re-load the model later and use it for prediction. [See the code for more details on how to do this][cnn-code-detail].
+
+Note that Keras also supports saving the architecture and weights in separate files.
+
 [coding-an-ann-tooling]: ../Part%201%20-%20Artificial%20Neural%20Networks%20(ANN)/2-coding-an-ann.md#tooling
 [keras-folder-structure-for-image-datasets]: ./keras-folder-structure-for-image-datasets.png
 [image-augmentation-article]: https://machinelearningmastery.com/how-to-configure-image-data-augmentation-when-training-deep-learning-neural-networks/

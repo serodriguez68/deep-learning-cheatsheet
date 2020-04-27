@@ -138,3 +138,46 @@ image_classifier_cnn.fit_generator(
         # validation_steps: Number of images on the test set (without counting image augmentation).
         validation_steps=2000
 )
+
+# Part 4 - Save the Model for Future Use
+# ----------------------------
+saved_model_path = f'{SAVE_MODEL_DIRECTORY}/cnn_image_classifier.h5'
+image_classifier_cnn.save(saved_model_path)
+print('Saved to disk')
+
+
+# ... later
+# Part 5 - Load Model and Make Predictions
+# ----------------------------
+from keras.models import load_model
+loaded_model = load_model(saved_model_path)
+loaded_model.summary()
+
+# Load images to make single predictions
+from keras.preprocessing import image
+import matplotlib.pyplot as plt
+import numpy as np
+
+
+def load_image(img_path, target_size, max_pixel_value, show=False):
+    img = image.load_img(img_path, target_size=target_size)
+    img_tensor = image.img_to_array(img)             # (height, width, channels)
+    img_tensor = np.expand_dims(img_tensor, axis=0)  # (1, height, width, channels), add a dimension because the model expects this shape: (batch_size, height, width, channels)
+    img_tensor /= max_pixel_value                    # Scale pixel value
+
+    if show:
+        plt.imshow(img_tensor[0])
+        plt.axis('off')
+        plt.show()
+
+    return img_tensor
+
+EXAMPLES_DIRECTORY = 'annotated_code/volume_1_supervised_deep_learning/part_2_convolutional_neural_network/dataset/single_prediction'
+img1 = load_image(f'{EXAMPLES_DIRECTORY}/cat_or_dog_1.jpg', target_size=INPUT_IMAGE_SIZE, max_pixel_value=PIXEL_MAX_VALUE)
+img2 = load_image(f'{EXAMPLES_DIRECTORY}/cat_or_dog_2.jpg', target_size=INPUT_IMAGE_SIZE, max_pixel_value=PIXEL_MAX_VALUE)
+
+prediction1 = loaded_model.predict_classes(img1)
+prediction2 = loaded_model.predict_classes(img2)
+
+print(f'Image 1 has a predicted class of = {prediction1[0][0]}')
+print(f'Image 2 has a predicted class of = {prediction2[0][0]}')

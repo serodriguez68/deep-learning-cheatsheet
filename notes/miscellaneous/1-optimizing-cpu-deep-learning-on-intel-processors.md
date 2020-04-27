@@ -1,4 +1,4 @@
-# Optimizing CPU deep learning on a Mac
+# Optimizing CPU-based deep learning on Intel Processors
 
 Making deep learning go faster in the hardware you have is not trivial at all.
 If you can, get a GPU (although that in turn has a lot of configuration challenges).
@@ -10,7 +10,7 @@ are still plenty of things you can do to optimize your deep learning experience 
 Intel (the processor manufacturer) has an [Anaconda Channel] where they publish intel optimized builds
 of many core python libraries like `numpy`, `tensorflow` or even a custom build of `python`.
 
-Using this in you mac can seriously boost the performance of your deep learning models, since the 
+Using this in you computer can seriously boost the performance of your deep learning models, since the 
 libraries have been optimized to take full advantage of your intel processor.
 
 If you see a warning like `The TensorFlow library wasn't compiled to use SSE4.2 instructions, but these are available on your machine and could speed up CPU computations.`,

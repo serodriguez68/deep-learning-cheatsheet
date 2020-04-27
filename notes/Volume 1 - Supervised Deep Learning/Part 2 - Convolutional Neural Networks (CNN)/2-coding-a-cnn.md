@@ -81,9 +81,26 @@ For example: 32 in the first convolutional layer, 64 in the second, 128 in the t
 Same thing. This is a hyperparameter that is found experimentally. Take into account that as the number of conv-layers
 increase, so does the computation intensity of the task, so start with 1 or 3 and ramp up.
 
+## Overfitting control using _dropout regularisation_
+
+The motivation for using _dropout_ to control overfitting in CNNS  is largelythe same way as [for ANNs.][dropout-in-anns]
+
+Implementation-wise, there are some nuances that only apply to CNNs:
+- In CNNs, dropout is typically used after the pooling layers, but this is a rough heuristic.
+It could also be used after the convolution layers.
+- In CNNs,  an alternative form dropout is to drop entire feature maps (as opposed to regions of each feature map). 
+This is called `SpatialDropout` and it is also supported in Keras.
+- Dropout can also be applied to the fully connected hidden layers after flattening. This can be done in addition
+to dropout in the convolution or max-pooling layers.
+
+
+[Learn more about dropout regularisation here.][machine-learning-mastery-dropout]
+
 [coding-an-ann-tooling]: ../Part%201%20-%20Artificial%20Neural%20Networks%20(ANN)/2-coding-an-ann.md#tooling
 [keras-folder-structure-for-image-datasets]: ./keras-folder-structure-for-image-datasets.png
 [image-augmentation-article]: https://machinelearningmastery.com/how-to-configure-image-data-augmentation-when-training-deep-learning-neural-networks/
 [cnn-code-detail]: ../../../annotated_code/volume_1_supervised_deep_learning/part_2_convolutional_neural_network/cnn_image_classifier.py
 [flow-from-directory-method]: https://keras.io/preprocessing/image/#image-preprocessing
 [horizontal-shift-image-augmentation]: ./horizontal-shift-image-augmentation.png
+[dropout-in-anns]: ../Part%201%20-%20Artificial%20Neural%20Networks%20(ANN)/2-coding-an-ann.md#overfitting-control-using-_dropout-regularisation_
+[machine-learning-mastery-dropout]: https://machinelearningmastery.com/how-to-reduce-overfitting-with-dropout-regularization-in-keras/

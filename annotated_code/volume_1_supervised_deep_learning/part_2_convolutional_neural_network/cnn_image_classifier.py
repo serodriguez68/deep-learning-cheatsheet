@@ -53,6 +53,7 @@ from keras.layers import Convolution2D  # To deal with images (including color i
 from keras.layers import MaxPool2D
 from keras.layers import Flatten
 from keras.layers import Dense  # Used for the Feed-Forward ANN after flattening has been done
+from keras.layers import Dropout  # Overfitting control with dropout regularisation
 
 # Defining the CNN using Sequential
 image_classifier_cnn = Sequential()   # Creates an empty container for the network
@@ -80,7 +81,14 @@ image_classifier_cnn.add(
     # strides: The stride of the pooling window. If not specified, defaults to pool_size.
 )
 
-#  We can keep adding convolutional-relu layers followed by max pooling layers in a similar way as above...
+# Control overfitting with dropout
+# In CNNs, dropout is typically used after the pooling layers, but this is a rough heuristic. It could also
+# be used after the convolution layers.
+# An alternative way of dropout in CNNS is to drop entire feature maps (as opposed to regions of each feature map).
+# This is called 'SpatialDropout'
+# image_classifier_cnn.add(Dropout(rate=0.3))
+
+# We can keep adding convolutional-relu layers followed by max pooling layers in a similar way as above...
 image_classifier_cnn.add(
     Convolution2D(filters=64, kernel_size=(3, 3), strides=1, data_format='channels_last', activation='relu')
     # We omit input_shape, because this time because Keras automatically figures out the input shape based on the
@@ -104,6 +112,7 @@ image_classifier_cnn.add(
     # units: number of neurons in the layer. Which number to choose is an art.
     #        It is a trade-off between computation intensity + overfitting risk VS accuracy.
 )
+image_classifier_cnn.add(Dropout(rate=0.5))  # Overfitting control
 # We use 1 node with a sigmoid function to make the network a classifier
 image_classifier_cnn.add(
     Dense(units=1, activation='sigmoid')

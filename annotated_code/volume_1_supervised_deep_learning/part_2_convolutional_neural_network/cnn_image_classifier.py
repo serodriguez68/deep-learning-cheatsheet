@@ -1,3 +1,41 @@
+# Run Configuration
+# ----------------------------
+# @see https://software.intel.com/en-us/articles/maximize-tensorflow-performance-on-cpu-considerations-and-recommendations-for-inference
+# @see https://towardsdatascience.com/optimize-your-cpu-for-deep-learning-424a199d7a87
+
+# VARIANT 1 - USING OLD TF 1 SYNTAX:
+# from keras import backend as K
+# import os
+# import tensorflow as tf
+# NUM_PARALLEL_EXEC_UNITS = 4 # Number of cores
+# config = tf.compat.v1.ConfigProto(
+#     intra_op_parallelism_threads=NUM_PARALLEL_EXEC_UNITS,
+#     inter_op_parallelism_threads=2,
+#     allow_soft_placement=True,
+#     device_count={'CPU': NUM_PARALLEL_EXEC_UNITS}
+# )
+# session = tf.compat.v1.Session(config=config)
+# tf.compat.v1.keras.backend.set_session(session)
+# os.environ["OMP_NUM_THREADS"] = str(NUM_PARALLEL_EXEC_UNITS)
+# os.environ["KMP_BLOCKTIME"] = "0" # Intel recommends 0 for CNNs
+# os.environ["KMP_SETTINGS"] = "1"
+# os.environ["KMP_AFFINITY"] = "granularity=fine,verbose,compact,1,0"
+
+# VARIANT 2 - USING TF 2 SYNTAX:
+NUM_PARALLEL_EXEC_UNITS = 4
+import os
+import tensorflow as tf
+tf.config.threading.set_inter_op_parallelism_threads(2)
+tf.config.threading.set_intra_op_parallelism_threads(NUM_PARALLEL_EXEC_UNITS)  # Number of physical cores.
+print('Tensorflow run configuration:')
+print(f'inter_op_parallelism_threads = {tf.config.threading.get_inter_op_parallelism_threads()}')
+print(f'intra_op_parallelism_threads (number of physical cores) = {tf.config.threading.get_intra_op_parallelism_threads()}')
+print(' ')
+os.environ["OMP_NUM_THREADS"] = str(NUM_PARALLEL_EXEC_UNITS)
+os.environ["KMP_BLOCKTIME"] = "0"  # Intel recommends 0 for CNNs
+os.environ["KMP_SETTINGS"] = "1"
+os.environ["KMP_AFFINITY"] = "granularity=fine,verbose,compact,1,0"
+
 # Part 1 - Data Pre-processing
 # ----------------------------
 # READ the 2-coding-a-cnn.md notes for more information about data Pre-Processing
@@ -5,11 +43,17 @@
 # IMPORTANT NOTE: the dataset to run this example was not included in the
 # repo because it is too big.  Please go to https://www.superdatascience.com/pages/deep-learning
 # to download it.
+
 TRAINING_SET_DIRECTORY = 'annotated_code/volume_1_supervised_deep_learning/part_2_convolutional_neural_network/dataset/training_set'
 TEST_SET_DIRECTORY = 'annotated_code/volume_1_supervised_deep_learning/part_2_convolutional_neural_network/dataset/test_set'
-INPUT_IMAGE_SIZE = (64, 64)
+SAVE_MODEL_DIRECTORY = 'annotated_code/volume_1_supervised_deep_learning/part_2_convolutional_neural_network/models'
+TRAINING_SIZE = 8000  # Before image augmentation
+TEST_SIZE = 2000
+INPUT_IMAGE_SIZE = (128, 128)
 INPUT_IMAGE_SIZE_W_CHANNELS = INPUT_IMAGE_SIZE + (3,)
 PIXEL_MAX_VALUE = 255
+BATCH_SIZE = 32
+EPOCHS = 60
 
 from keras.preprocessing.image import ImageDataGenerator
 
@@ -33,16 +77,18 @@ test_datagen = ImageDataGenerator(rescale=1./PIXEL_MAX_VALUE)
 training_set = train_datagen.flow_from_directory(
         TRAINING_SET_DIRECTORY,
         target_size=INPUT_IMAGE_SIZE,  # Resizing images to a standard shape
-        batch_size=32,  # Size of the training batches in mini-batch gradient descent
+        batch_size=BATCH_SIZE,  # Size of the training batches in mini-batch gradient descent
         class_mode='binary'  # Type of problem
 )
 test_set = test_datagen.flow_from_directory(
         TEST_SET_DIRECTORY,
         target_size=INPUT_IMAGE_SIZE,
-        batch_size=32,
+        batch_size=BATCH_SIZE,
         class_mode='binary'
 )
 
+classes = training_set.class_indices
+print(f'The assigned class indices are: {classes}')
 
 # Part 2 - Make the CNN
 # ----------------------------
@@ -90,13 +136,14 @@ image_classifier_cnn.add(
 
 # We can keep adding convolutional-relu layers followed by max pooling layers in a similar way as above...
 image_classifier_cnn.add(
-    Convolution2D(filters=64, kernel_size=(3, 3), strides=1, data_format='channels_last', activation='relu')
+    Convolution2D(filters=32, kernel_size=(3, 3), strides=1, data_format='channels_last', activation='relu')
     # We omit input_shape, because this time because Keras automatically figures out the input shape based on the
     # previous layer.  The input_shape parameter is only need for the first layer of the whole network
 )
-image_classifier_cnn.add(
-    MaxPool2D(pool_size=2)
-)
+image_classifier_cnn.add(MaxPool2D(pool_size=2))
+image_classifier_cnn.add(Convolution2D(filters=64, kernel_size=(3, 3), strides=1, data_format='channels_last', activation='relu'))
+image_classifier_cnn.add(MaxPool2D(pool_size=2))
+
 
 # Add the Flattening Layer
 # Flattens the last max-pooling layer into a (very big) single vector
@@ -108,7 +155,7 @@ image_classifier_cnn.add(
 # Add the Full Connection Layer
 # We will only add one hidden layer
 image_classifier_cnn.add(
-    Dense(units=128, activation='relu')
+    Dense(units=64, activation='relu')
     # units: number of neurons in the layer. Which number to choose is an art.
     #        It is a trade-off between computation intensity + overfitting risk VS accuracy.
 )
@@ -124,19 +171,17 @@ image_classifier_cnn.compile(optimizer='adam', loss='binary_crossentropy', metri
 
 # Part 3 - Training the CNN on the images (and augmented images)
 # ----------------------------
-# TODO: you were going to build Tensorflow from source to get rid of the warning and speedup
-# The warning: Your CPU supports instructions that this TensorFlow binary was not compiled to use: SSE4.1 SSE4.2 AVX AVX2 FMA
-# How to build: https://github.com/tensorflow/tensorflow/issues/8037#issuecomment-283831398
-
+import math
 image_classifier_cnn.fit_generator(
         training_set,
-        # steps_per_epoch: Number of images on the training set (without counting image augmentation).
-        # We want all data to go through on each epoch.
-        steps_per_epoch=8000,
-        epochs=25,
+        # steps_per_epoch: Total number of steps (batches of samples) to yield from generator before declaring one epoch
+        # finished and starting the next epoch. It should typically be equal to ceil(num_samples / batch_size).
+        steps_per_epoch=math.ceil(TRAINING_SIZE/BATCH_SIZE),
+        epochs=EPOCHS,
         validation_data=test_set,
-        # validation_steps: Number of images on the test set (without counting image augmentation).
-        validation_steps=2000
+        # validation_steps: Total number of steps (batches of samples) to draw before stopping when performing
+        # validation at the end of every epoch.
+        validation_steps=math.ceil(TEST_SIZE/BATCH_SIZE)
 )
 
 # Part 4 - Save the Model for Future Use

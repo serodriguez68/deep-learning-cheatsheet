@@ -15,8 +15,8 @@ dependencies in ANNs or CNNs.
 - Natural Language has "long distance effects". These are inherently a time series problem. 
    - e.g. _"I, the president of the United States, AM going to declare"_. In this example,  _"AM"_ is dependent on the
    word _"I"_.
-- Inputs in Natural Language problems of varying length because texts are of varying length. ANNs and
-CNNs take fixed size inputs.
+- Inputs in many NLP problems need to be of varying length because texts are of varying length. ANNs and
+CNNs only take fixed size inputs.
 
 ## Structure of a RNN
 
@@ -30,7 +30,7 @@ neuron at time `t+1` uses 2 sources of inputs:
 1. The input from the `input sequence`.
 1. The output from time `t`.
 
-Don't be fooled by the simplified flat representation above. RNNs are multidimensional. A more precise depicting
+Don't be fooled by the simplified flat representation above. RNNs are multidimensional. A more precise representation
 of how they are structured would be:
 ![Multidimensional RNN Structure][multidimensional-rnn-structure]
  
@@ -97,7 +97,78 @@ is very popular for RNNs and we will discuss it in detail in the [next section][
   
 
 ## Long Short-Term Memory (LSTM) Networks
-- Weights as we have seen them in ANNs and CNNs can be seen as a Long Term Memory
+
+This summary is heavily based on the following article. 
+I strongly recommend reading it: [Understanding LSTM Networks by Christopher Olah][understanding-lstm-colah]
+
+LSTM networks are a particular architecture of the more general RNN category. They are of particular importance because 
+almost all exciting results from RNNs have been achieved using this architecture.
+
+### Motivation
+
+An RNNs main feature taking into account previous inputs and predictions to perform the current time-step prediction.
+ 
+When the previous relevant context happened recently, "Vanilla" RNNs have no problem using that to inform the current
+prediction.  For example, in the if we were predicting the next word in the phrase _"the __clouds__ are in the `sky`"_,
+__"clouds"__ happens very close to the place where `sky` is being predicted.
+
+However, in a lot of applications (including text) context has a long distance effect. In these circumstances, 
+"Vanilla RNNs" struggle to "remember" what happened many time steps ago. Continuing with the text prediction example,
+if the phrase was _"I grew up in __France__, the birthplace of civil liberties. I speak fluent `French`"_. __"France__"
+ is critical context to predict `French`, but it happened so long ago that a "Vanilla RNN" won't be able to "remember"
+it and use it in the prediction.  This is why it is said that Vanilla RNNs have short term memory.
+
+- We've been talking about the short term memory problems of "Vanilla RNNs" from the inference point of view. However,
+they have the same problem at training time.  During training, "Vanilla RNNs" are unable to connect related concepts if
+they have a long distance between them.
+
+### LSTM Intuition
+
+LSTMs are specifically designed to tackle the short-term memory problem.  In fact, having long-term memory is their
+default behaviour.
+
+An LSTM is a group of interconnected learned neural network operations and point-wise operations that are grouped
+together in a "repeating group" that gets repeated as a "vanilla RNN" would.
+
+Each of these neural network and point-wise operations serve a particular purpose in the architecture and are explained
+later.  For now, lets get familiar with the notation:
+
+![LSTM notation][lstm-notation]
+ 
+#### Memory Pipeline - The core idea 
+The core idea behind LSTMs is the __"memory cell / pipeline"__. Through __memory pipeline__ information flows easily
+and mostly unchanged across the multiple steps of the RNN.  Changes to the memory only happen when the gates
+determine so.
+
+> Side note: Intuitively, since the information in the pipeline doesn't change much, the derivative over time stays close to 1. This
+is why LSTMs are less prone to suffer from vanishing or exploding gradient problems.
+    
+![The memory Pipeline - The core idea behind LSTMs][lstm-core-idea]
+
+
+#### Step-by-step walk through
+![LSTM walk through part 1][lstm-walk-through-pt1]
+![LSTM walk through part 2][lstm-walk-through-pt2]  
+
+
+### LSTM Variations
+
+There are many variants of the LSTM architecture shown above. Most of them are slight variations of
+this architecture and have similar performance.
+
+- Some popular variants are: Peephole connections, unified forget and remember decisions, Gated Recurring Units (GRUs), among many others.
+- Go to [Christopher Olah's article to read about these popular variants][understanding-lstm-colah].
+- [Greff et al][greff-et-al] published a paper showing that most variations are about the same.
+- [Jozefowicz et al][jozefowicz-et-al] published a paper comparing many architectures and shows that some work better
+on certain tasks.
+
+## Beyond LSTMs - Attention Models
+
+LSTMs where a step forward in RNN performance. The next big step in RNN performance are __attention RNNs__.
+[Chirstopher Colah has an article Attention RNNs][attention-colah] and other forms of RNN augmentation.
+
+## Other Additional Reading
+- [Visualizing and Understanding Recurrent Networks by Andrej Karpathy (2015)][karpathy].
 
 
 [simplified-rnn-structure]: ./simplified-rnn-structure.png
@@ -105,5 +176,14 @@ is very popular for RNNs and we will discuss it in detail in the [next section][
 [sample-rnn-applications]: ./sample-rnn-applications.png
 [deep-lizard-vanishing-gradient-problem]: https://youtu.be/qO_NLVjD6zE
 [vanishing-gradient-problem-rnn]: ./vanishing-gradient-problem-rnn.png
-[deep-lizard-xavier-initialization]: https://www.youtube.com/watch?v=8krd5qKVw-
+[deep-lizard-xavier-initialization]: https://www.youtube.com/watch?v=8krd5qKVw-Q
 [lstm-section]: #long-short-term-memory-lstm-networks
+[understanding-lstm-colah]: https://colah.github.io/posts/2015-08-Understanding-LSTMs/
+[lstm-notation]: ./lstm-notation.png
+[lstm-core-idea]: ./lstm-core-idea.png
+[lstm-walk-through-pt1]: ./lstm-walk-through-pt1.png
+[lstm-walk-through-pt2]: ./lstm-walk-through-pt2.png
+[greff-et-al]: https://arxiv.org/pdf/1503.04069.pdf
+[jozefowicz-et-al]: http://proceedings.mlr.press/v37/jozefowicz15.pdf
+[attention-colah]: https://distill.pub/2016/augmented-rnns/
+[karpathy]: https://arxiv.org/pdf/1506.02078.pdf

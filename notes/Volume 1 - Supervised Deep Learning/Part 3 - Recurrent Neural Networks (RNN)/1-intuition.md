@@ -112,11 +112,13 @@ When the previous relevant context happened recently, "Vanilla" RNNs have no pro
 prediction.  For example, in the if we were predicting the next word in the phrase _"the __clouds__ are in the `sky`"_,
 __"clouds"__ happens very close to the place where `sky` is being predicted.
 
-However, in a lot of applications (including text) context has a long distance effect. In these circumstances, 
-"Vanilla RNNs" struggle to "remember" what happened many time steps ago. Continuing with the text prediction example,
+However, in many applications (including text) context has a long distance effect. In these circumstances, 
+"Vanilla RNNs" struggle to "remember" what happened many time steps ago. 
+
+Continuing with the text prediction example,
 if the phrase was _"I grew up in __France__, the birthplace of civil liberties. I speak fluent `French`"_. __"France__"
- is critical context to predict `French`, but it happened so long ago that a "Vanilla RNN" won't be able to "remember"
-it and use it in the prediction.  This is why it is said that Vanilla RNNs have short term memory.
+is critical context to predict `French`, but it happened so long ago that a "Vanilla RNN" won't be able to "remember"
+it to narrow down the prediction.  This is why it is said that Vanilla RNNs have short term memory.
 
 - We've been talking about the short term memory problems of "Vanilla RNNs" from the inference point of view. However,
 they have the same problem at training time.  During training, "Vanilla RNNs" are unable to connect related concepts if
@@ -127,18 +129,18 @@ they have a long distance between them.
 LSTMs are specifically designed to tackle the short-term memory problem.  In fact, having long-term memory is their
 default behaviour.
 
-An LSTM is a group of interconnected learned neural network operations and point-wise operations that are grouped
-together in a "repeating group" that gets repeated as a "vanilla RNN" would.
+An LSTM is a group of interconnected learned neural networks and point-wise operations that are grouped
+together in a "repeating group".
 
-Each of these neural network and point-wise operations serve a particular purpose in the architecture and are explained
-later.  For now, lets get familiar with the notation:
+Each of these neural networks and point-wise operations serve a particular purpose in the architecture and are explained
+below. For now, lets get familiar with the notation:
 
 ![LSTM notation][lstm-notation]
  
-#### Memory Pipeline - The core idea 
-The core idea behind LSTMs is the __"memory cell / pipeline"__. Through __memory pipeline__ information flows easily
+#### The Memory Pipeline - The core idea 
+The core idea behind LSTMs is the __"memory cell / pipeline"__. Through the __memory pipeline__, information flows easily
 and mostly unchanged across the multiple steps of the RNN.  Changes to the memory only happen when the gates
-determine so.
+determine so (see below).
 
 > Side note: Intuitively, since the information in the pipeline doesn't change much, the derivative over time stays close to 1. This
 is why LSTMs are less prone to suffer from vanishing or exploding gradient problems.
@@ -164,8 +166,8 @@ on certain tasks.
 
 ## Beyond LSTMs - Attention Models
 
-LSTMs where a step forward in RNN performance. The next big step in RNN performance are __attention RNNs__.
-[Chirstopher Colah has an article Attention RNNs][attention-colah] and other forms of RNN augmentation.
+LSTMs were a step forward in RNN performance. The next big step in RNN performance are __attention RNNs__.
+[Chirstopher Colah has an article on Attention RNNs][attention-colah] and other forms of RNN augmentation.
 
 ## Other Additional Reading
 - [Visualizing and Understanding Recurrent Networks by Andrej Karpathy (2015)][karpathy].

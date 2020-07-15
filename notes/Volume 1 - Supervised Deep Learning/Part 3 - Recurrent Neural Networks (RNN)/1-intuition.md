@@ -129,7 +129,7 @@ they have a long distance between them.
 LSTMs are specifically designed to tackle the short-term memory problem.  In fact, having long-term memory is their
 default behaviour.
 
-An LSTM is a group of interconnected learned neural networks and point-wise operations that are grouped
+An LSTM is a group of interconnected learned single-layer neural networks and point-wise operations that are grouped
 together in a "repeating group".
 
 Each of these neural networks and point-wise operations serve a particular purpose in the architecture and are explained
@@ -170,6 +170,8 @@ LSTMs were a step forward in RNN performance. The next big step in RNN performan
 [Chirstopher Colah has an article on Attention RNNs][attention-colah] and other forms of RNN augmentation.
 
 ## Other Additional Reading
+- If you want to understand even deeper how each of the operations inside the LSTM repreating unit works,
+I recommend reading ["Understanding LSTM and its diagrams"][understanding-lstm-and-its-diagrams]. 
 - [Visualizing and Understanding Recurrent Networks by Andrej Karpathy (2015)][karpathy].
 
 
@@ -188,4 +190,5 @@ LSTMs were a step forward in RNN performance. The next big step in RNN performan
 [greff-et-al]: https://arxiv.org/pdf/1503.04069.pdf
 [jozefowicz-et-al]: http://proceedings.mlr.press/v37/jozefowicz15.pdf
 [attention-colah]: https://distill.pub/2016/augmented-rnns/
+[understanding-lstm-and-its-diagrams]: https://medium.com/mlreview/understanding-lstm-and-its-diagrams-37e2f46f1714
 [karpathy]: https://arxiv.org/pdf/1506.02078.pdf

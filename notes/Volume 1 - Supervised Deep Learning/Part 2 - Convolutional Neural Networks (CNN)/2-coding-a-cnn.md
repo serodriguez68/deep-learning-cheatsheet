@@ -83,7 +83,7 @@ increase, so does the computation intensity of the task, so start with 1 or 3 an
 
 ## Overfitting control using _dropout regularisation_
 
-The motivation for using _dropout_ to control overfitting in CNNS  is largelythe same way as [for ANNs.][dropout-in-anns]
+The motivation for using _dropout_ to control overfitting in CNNS  is largely the same as [for ANNs.][dropout-in-anns]
 
 Implementation-wise, there are some nuances that only apply to CNNs:
 - In CNNs, dropout is typically used after the pooling layers, but this is a rough heuristic.

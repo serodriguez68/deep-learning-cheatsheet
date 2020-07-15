@@ -92,6 +92,8 @@ classifier_ann.compile(optimizer='adam', loss='binary_crossentropy', metrics=['a
 classifier_ann.fit(X_train, y_train, batch_size=10, epochs=100)
 # batch_size: number of observations before the loss function gets evaluated and the weights are updated.
 # How to choose these parameters? It is an art. You need to do experimentation.
+# - If the epochs number is too small, you will see that the RNN still hasn't converged
+# - If the epochs number is too big, you risk overfitting
 
 
 # Part 3 - Making the predictions and evaluating the model

@@ -31,12 +31,12 @@ features per word.
 
 
 ## Building the RNN
-Keras makes it very easy with the `LSTM` layer. See [the annotated code][[lstm-stock-trend-sample-code]] for all the details.
+Keras makes it very easy with the `LSTM` layer. See [the annotated code][lstm-stock-trend-sample-code] for all the details.
 
-## Arguments of the LSTM layer in Keras
+### Arguments of the LSTM layer in Keras
 The `LSTM` layer has 3 fundamental arguments.
 
-### `units`
+#### `units`
 It is the number of neurons in each single-layer fully-connected neural network within the LSTM repeating group.
 
 For example, if `units=250`, this means that the sigmoid neural layers and the tanh neural layers in the valves will
@@ -50,7 +50,7 @@ example, each LSTM time step will have an `ht` output of size 250x1.
 - For example, if dealing with an NLP problem using embeddings of size 500, the `units` can be set to 500 as well. 
 
 
-### `return_sequences`
+#### `return_sequences`
 By default, Keras' LSTM layer only returns the output of the last time step. If we want it to give an 
 output per time step me must set `return_sequences=true`.
 
@@ -59,7 +59,7 @@ interested in the output per time step.
 
 ![keras lstm return sequence][keras-lstm-return-sequences-diagram]
 
-### `input_shape`
+#### `input_shape`
 - `input_shape = (time_steps_in_batch, num_features_for_each_time_step)`
 - Keras will automatically detect the number of samples in the batch, so it doesn't need to be specified.
 - If we have varying sequence lengths we can use `None` and Keras will accept batches with different lengths. For example
@@ -78,7 +78,7 @@ As with any neural network, it depends on the type of task you are doing.
 [See our summary about loss functions in ANNs for more information][ann-which-loss-function]
  
  
- ## Overfitting control using _dropout regularisation_
+## Overfitting control using _dropout regularisation_
  
  Recommended read: Machine Learning Mastery has a great [article dedicated to this topic][mlm-lstm-dropout].
  
@@ -103,6 +103,26 @@ As with any neural network, it depends on the type of task you are doing.
 Rule of thumb: Hadelin from Udemy recommends starting with a dropout of 20% and explore from there.
 RNNs require higher dropouts than ANNs or CNNs because they are very prone to overfitting, so a dropout
 of 40% is not uncommon.
+
+## Evaluating a Recurrent Model
+
+Evaluation of a Recurrent neural network is no different than any other ML model and is driven by the nature o the 
+task.
+- __Classification problems__ are evaluated using a confusion matrix, accuracy, precision, recall, ROC curves etc.
+- __Regression problems__ are typically evaluated using metrics like `RSquared / Adjusted R sared, Mean Square Error,
+Mean Absosute Error, etc.`  
+ 
+ The one thing that is different when dealing with regression in time series (RNN or not) is that some times we are 
+ interested in predicting the general upward / downward **trend** of a variable while not caring much about 
+ the accuracy of the values.  For these cases, classical regression metrics like `Mean Square Error` are not an
+ adequate representation of model performance and other techniques need to be used (out of scope of this summary).
+ 
+ ## Tuning an LSTMs
+ Similar to other types of deep-learning, tuning an LSTM requires experimental exploration to try to understand
+ the reasons for some prediction problems along with hyper-parameter and topology grid-search.
+ 
+ [Machine Learning Mastery][mlm-lstm-tuning] has an example of LSTM tuning with Keras for time series forecasting.
+ 
  
  
 [feature-scaling-summary]: https://github.com/serodriguez68/machine-learning-cheatsheet/blob/master/cheatsheets/Part%201%20-%20Data%20Preprocessing/data-preprocessing.md#feature-scaling
@@ -114,4 +134,5 @@ of 40% is not uncommon.
 [ann-which-loss-function]: ../Part%201%20-%20Artificial%20Neural%20Networks%20(ANN)/2-coding-an-ann.md#which-loss-function-to-use
 [dropout-in-anns]: ../Part%201%20-%20Artificial%20Neural%20Networks%20(ANN)/2-coding-an-ann.md#overfitting-control-using-_dropout-regularisation_
 [mlm-lstm-dropout]: https://machinelearningmastery.com/use-dropout-lstm-networks-time-series-forecasting/
+[mlm-lstm-tuning]: https://machinelearningmastery.com/tune-lstm-hyperparameters-keras-time-series-forecasting/
 

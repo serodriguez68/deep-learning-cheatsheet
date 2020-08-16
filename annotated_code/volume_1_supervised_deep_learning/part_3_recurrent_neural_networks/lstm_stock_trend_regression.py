@@ -46,7 +46,7 @@ y_train = []
 
 # We can only start at the 60th data point.
 for i in range(TIME_STEPS, len(training_set_scaled)):
-    X_train.append(training_set_scaled[i-TIME_STEPS:i, 0])
+    X_train.append(training_set_scaled[i - TIME_STEPS:i, 0])
     y_train.append(training_set_scaled[i, 0])
 
 # Transform lists to numpy arrays
@@ -56,7 +56,6 @@ y_train = np.array(y_train)
 # Reshape training data to match Keras' LSTM input structure
 # In this example, we have only one feature per time step. Reshape to make the 2D array 3D
 X_train = np.reshape(X_train, X_train.shape + (1,))
-
 
 # Part 2 - Building the LSTM
 # ----------------------------
@@ -119,7 +118,6 @@ regressor.add(Dense(units=1))
 # and he found out that for this example adam worked better.
 regressor.compile(optimizer='adam', loss='mean_squared_error')
 
-
 # Part 3 - Training the RNN
 # ----------------------------
 regressor.fit(X_train, y_train, epochs=100, batch_size=32)
@@ -130,12 +128,64 @@ regressor.fit(X_train, y_train, epochs=100, batch_size=32)
 # - If the epochs number is too big, you risk overfitting
 
 
-# Part 4 - Making the Predictions and visualizing the results
+# Part 4 - Making the Predictions, and Visualizing the Results
 # ----------------------------
+# -- Massaging the test data to get it in the right formant
+
 # Getting the test set (real stock price)
 dataset_test = pd.read_csv(
     './annotated_code/volume_1_supervised_deep_learning/part_3_recurrent_neural_networks/dataset/Google_Stock_Price_Test.csv'
 )
-real_stock_price = dataset_test[['Open']].values   # The test set
+real_stock_price = dataset_test[['Open']].values  # The test set
 
-# TODO YOU ARE HERE. About to start video 13
+# In this particular example, the first point in the test-set is the first financial day on 2017.
+# For predicting that, we need the stock prices in the 60 previous financial_days. Those 60 previous days
+# are the 60 last days of the training set.
+# Don't worry about "using observed train data for testing" in this case; it's not what it looks like.
+# Since we are dealing with a continuous time series, the particular exact combination of the last 60 days of the
+# train set was never observed at training time. The closest training got to observe was
+# (N_samples - 61) to (N_samples -1) as training input for the day at N_samples.
+# The following lines basically augment the test data with the previous 60 days.
+dataset_total = pd.concat((dataset_train['Open'], dataset_test['Open']), axis=0)
+test_inputs = dataset_total[len(dataset_total) - len(dataset_test) - TIME_STEPS:].values.reshape(-1, 1)
+test_inputs_scaled = sc.transform(test_inputs)  # Use the same scaling that was used at train time
+
+# test_inputs_scaled is an 80x1 array that contains the sequence of the stock price, now we need to transform the
+# data into the 3D shape Keras expects:
+# (num_test_samples, time_steps_per_sample, num_features_for_each_time_step) => (20, 60, 1)
+X_test = []
+# We can only start at the 60th data point (the first point in the test set)
+for i in range(TIME_STEPS, len(test_inputs_scaled)):
+    X_test.append(test_inputs_scaled[i - TIME_STEPS:i, 0])
+# Transform lists to numpy arrays
+X_test = np.array(X_test)
+
+# Reshape training data to match Keras' LSTM input structure
+# In this example, we have only one feature per time step. Reshape to make the 2D array 3D
+X_test = np.reshape(X_test, X_test.shape + (1,))
+
+# -- Apply the regressor to the test data
+y_predicted_scaled = regressor.predict(X_test)
+predicted_stock_price = sc.inverse_transform(
+    y_predicted_scaled)  # predicted_stock_price contains the predicted google stock prices.
+
+# -- Visualize the predicted stock price vs the actual stock price
+plt.plot(real_stock_price, color='red', label='Real Google Stock Price')
+plt.plot(predicted_stock_price, color='blue', label='Real Google Stock Price')
+plt.title('Google Stock Price Prediction')
+plt.xlabel('Financial Days from Jan 1 2017')
+plt.ylabel('Stock Price USD')
+plt.legend()
+plt.show()
+
+# Part 5 - Evaluating the Model
+# ----------------------------
+# We are going to show how to evaluate the regressor as if we cared about the accuracy of the predictions.
+# However, note that in stock market predictions, we are typically interested in predicting the updwards / downwards
+# trend of the stock rather than the actual value.
+# As a result, measures lake the MSE are a less relevant measure o performance in these cases.
+# For this particular example, Hadelin did a qualitative visual assessment of the model's performance using the graph.
+import math
+from sklearn.metrics import mean_squared_error
+rmse = math.sqrt(mean_squared_error(real_stock_price, predicted_stock_price))
+print('The RMSE is: ' + str(rmse))
